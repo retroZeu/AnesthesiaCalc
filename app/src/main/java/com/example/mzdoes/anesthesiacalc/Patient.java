@@ -13,7 +13,7 @@ public class Patient implements Parcelable, Serializable {
     private String name;
     private int weight;
     private boolean withEpinephrine;
-    private boolean anesthesiaType;
+    private boolean anesthesiaType; //true = lidocaine, false = bupivocaine
 
     public Patient() {
         name = "John";
@@ -52,6 +52,18 @@ public class Patient implements Parcelable, Serializable {
 
     public void setAnesthesiaType(boolean anesthesiaType) {
         this.anesthesiaType = anesthesiaType;
+    }
+
+    public int calculateDose() {
+        int allowableDose = 0;
+        if (anesthesiaType) {
+            if (withEpinephrine) {allowableDose = 7;} else {allowableDose = 3;}
+        } else {allowableDose = 2;}
+
+        //placeholder concentration
+        int concentration = 10;
+
+        return (allowableDose * (weight/10) * (1/concentration));
     }
 
     @Override

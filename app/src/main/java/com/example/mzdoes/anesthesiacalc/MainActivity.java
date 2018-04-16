@@ -1,18 +1,15 @@
 package com.example.mzdoes.anesthesiacalc;
 
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
-
-import java.util.jar.Attributes;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,12 +40,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewPager + ":" + mPager.getCurrentItem());
-                if (mPager.getCurrentItem() == 0) {
+                if (mPager.getCurrentItem() == 0 && page != null) {
                     nameHolder = ((NameWeightFragment)page).getNameHolder();
                     weightHolder = ((NameWeightFragment)page).getWeightHolder();
                     Toast.makeText(MainActivity.this, nameHolder + ", " + weightHolder, Toast.LENGTH_SHORT).show();
                     mPager.setCurrentItem(getItem(+1), true);
-                } else if (mPager.getCurrentItem() == 1) {
+
+                } else if (mPager.getCurrentItem() == 1 && page != null) {
                     anesthesiaTypeHolder = ((AnesthesiaFragment)page).isType();
                     withEpinephrineHolder = ((AnesthesiaFragment)page).isEpinephrine();
                     patient.setName(nameHolder);
@@ -56,9 +54,12 @@ public class MainActivity extends AppCompatActivity {
                     patient.setAnesthesiaType(anesthesiaTypeHolder);
                     patient.setWithEpinephrine(withEpinephrineHolder);
                     Toast.makeText(MainActivity.this, patient.toString(), Toast.LENGTH_LONG).show();
+                    nextButton.setImageResource(R.drawable.ic_arrow_back_black_24dp);
                     mPager.setCurrentItem(getItem(+1), true);
-                } else if (mPager.getCurrentItem() == 2) {
+
+                } else if (mPager.getCurrentItem() == 2 && page != null) {
                     mPager.setCurrentItem(0, true);
+                    nextButton.setImageResource(R.drawable.ic_arrow_forward_black_24dp);
                 }
 
             }
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int getItem(int i) {return mPager.getCurrentItem() + i;}
 
-    private class MyPagerAdapter extends FragmentPagerAdapter {
+    private class MyPagerAdapter extends FragmentStatePagerAdapter {
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
