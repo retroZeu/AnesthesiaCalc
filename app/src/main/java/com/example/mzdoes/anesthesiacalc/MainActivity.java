@@ -2,20 +2,19 @@ package com.example.mzdoes.anesthesiacalc;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.RadioGroup;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ViewPager mPager;
-    private PagerAdapter mPagerAdapter;
     private FloatingActionButton nextButton;
+    private EditText nameEditText, weightEditText;
+    private RadioGroup anesthesiaRadioGroup;
+    private CheckBox epinephrineCheckBox;
 
     private Patient patient;
 
@@ -30,65 +29,40 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         patient = new Patient();
-
-        mPager = findViewById(R.id.viewPager);
-        mPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
-
         nextButton = findViewById(R.id.floatingActionButton);
+        nameEditText = findViewById(R.id.editText_name);
+        weightEditText = findViewById(R.id.editText_weight);
+        anesthesiaRadioGroup = findViewById(R.id.radioGroup);
+        epinephrineCheckBox = findViewById(R.id.checkBox_epinephrine);
+
+        anesthesiaRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                if (radioGroup.indexOfChild(findViewById(checkedId)) == 0) {anesthesiaTypeHolder = true;}
+                else if (radioGroup.indexOfChild(findViewById(checkedId)) == 1) {anesthesiaTypeHolder = false;}
+            }
+        });
+
+        epinephrineCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                withEpinephrineHolder = isChecked;
+            }
+        });
+
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewPager + ":" + mPager.getCurrentItem());
-                if (mPager.getCurrentItem() == 0 && page != null) {
-                    nameHolder = ((NameWeightFragment)page).getNameHolder();
-                    weightHolder = ((NameWeightFragment)page).getWeightHolder();
-                    Toast.makeText(MainActivity.this, nameHolder + ", " + weightHolder, Toast.LENGTH_SHORT).show();
-                    mPager.setCurrentItem(getItem(+1), true);
+                nameHolder = nameEditText.getText().toString();
+                weightHolder = Utility.getNextInt(weightEditText.getText().toString());
 
-                } else if (mPager.getCurrentItem() == 1 && page != null) {
-                    anesthesiaTypeHolder = ((AnesthesiaFragment)page).isType();
-                    withEpinephrineHolder = ((AnesthesiaFragment)page).isEpinephrine();
-                    patient.setName(nameHolder);
-                    patient.setWeight(weightHolder);
-                    patient.setAnesthesiaType(anesthesiaTypeHolder);
-                    patient.setWithEpinephrine(withEpinephrineHolder);
-                    Toast.makeText(MainActivity.this, patient.toString(), Toast.LENGTH_LONG).show();
-                    nextButton.setImageResource(R.drawable.ic_arrow_back_black_24dp);
-                    mPager.setCurrentItem(getItem(+1), true);
+                patient.setName(nameHolder); patient.setWeight(weightHolder);
+                patient.setWithEpinephrine(withEpinephrineHolder); patient.setAnesthesiaType(anesthesiaTypeHolder);
 
-                } else if (mPager.getCurrentItem() == 2 && page != null) {
-                    mPager.setCurrentItem(0, true);
-                    nextButton.setImageResource(R.drawable.ic_arrow_forward_black_24dp);
-                }
+
 
             }
         });
-    }
-
-    private int getItem(int i) {return mPager.getCurrentItem() + i;}
-
-    private class MyPagerAdapter extends FragmentStatePagerAdapter {
-
-        public MyPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int pos) {
-            switch(pos) {
-
-                case 0: return NameWeightFragment.newInstance();
-                case 1: return AnesthesiaFragment.newInstance();
-                case 2: return ResultsFragment.newInstance(patient);
-                default: return NameWeightFragment.newInstance();
-            }
-        }
-
-        @Override
-        public int getCount() {
-            return 4;
-        }
     }
 
     public String getNameHolder() {

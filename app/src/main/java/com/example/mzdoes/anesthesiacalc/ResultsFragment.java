@@ -2,7 +2,6 @@ package com.example.mzdoes.anesthesiacalc;
 
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,19 +30,18 @@ public class ResultsFragment extends Fragment {
         TextView resultTextView = view.findViewById(R.id.textView_result);
         TextView descriptionTextView = view.findViewById(R.id.textView_description);
 
+        currentPatient = new Patient();
+        description = "rawr";
+        if (currentPatient != null && getArguments() != null) {
+            currentPatient = getArguments().getParcelable("currentPatient");
+            description = getArguments().getString("descString");
+        }
         resultTextView.setText(currentPatient.calculateDose() + " mg");
         descriptionTextView.setText(description);
 
         return view;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        currentPatient = getArguments().getParcelable("currentPatient");
-        description = getArguments().getString("descString");
-
-    }
 
     public static ResultsFragment newInstance(Patient patient) {
         ResultsFragment fragment = new ResultsFragment();
