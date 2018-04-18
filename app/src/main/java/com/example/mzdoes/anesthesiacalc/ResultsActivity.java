@@ -13,6 +13,7 @@ public class ResultsActivity extends AppCompatActivity {
 
     private Patient currentPatient;
     private String result, type, epinephrine, description;
+    private double concentration;
     private TextView resultTextView, descriptionTextView;
     private ImageButton shareButton;
     private FloatingActionButton backButton;
@@ -26,7 +27,7 @@ public class ResultsActivity extends AppCompatActivity {
         currentPatient = i.getParcelableExtra("currentPatient");
 
         result = calculateDose() + " mg";
-        if (currentPatient.isAnesthesiaType()) {type = "Lidocaine";} else {type = "Bupivocaine";}
+        if (currentPatient.isAnesthesiaType()) {type = "Lidocaine"; /**concentration = 0.0005;**/} else {type = "Bupivacaine"; /**concentration = 0.0075;**/}
         if (currentPatient.isWithEpinephrine()) {epinephrine = "with Epinephrine";} else {epinephrine = "without Ephinephrine";}
         description = "for " + currentPatient.getName() + " (" + currentPatient.getWeight() + " kg), using " + type + " " + epinephrine;
 
@@ -55,7 +56,7 @@ public class ResultsActivity extends AppCompatActivity {
             }
         });
     }
-
++
     public double calculateDose() {
         double allowableDose;
         if (currentPatient.isAnesthesiaType()) {
@@ -63,9 +64,8 @@ public class ResultsActivity extends AppCompatActivity {
         } else {allowableDose = 2;}
 
         //placeholder concentration
-        int concentration = 10;
-
-        double dose = allowableDose * (currentPatient.getWeight()/10) * ((double) 1/concentration);
+        concentration = 10;
+        double dose = (allowableDose * (currentPatient.getWeight()/10) * ((double) 1/concentration));
         return (dose);
     }
 }
