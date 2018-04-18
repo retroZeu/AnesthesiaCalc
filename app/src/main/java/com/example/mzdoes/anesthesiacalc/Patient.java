@@ -2,6 +2,8 @@ package com.example.mzdoes.anesthesiacalc;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.io.Serializable;
 
@@ -54,18 +56,6 @@ public class Patient implements Parcelable, Serializable {
         this.anesthesiaType = anesthesiaType;
     }
 
-    public int calculateDose() {
-        int allowableDose = 0;
-        if (anesthesiaType) {
-            if (withEpinephrine) {allowableDose = 7;} else {allowableDose = 3;}
-        } else {allowableDose = 2;}
-
-        //placeholder concentration
-        int concentration = 10;
-
-        return (allowableDose * (weight/10) * (1/concentration));
-    }
-
     @Override
     public String toString() {
         return "Patient{" +
@@ -75,19 +65,16 @@ public class Patient implements Parcelable, Serializable {
                 ", anesthesiaType=" + anesthesiaType +
                 '}';
     }
-
     protected Patient(Parcel in) {
         name = in.readString();
         weight = in.readInt();
         withEpinephrine = in.readByte() != 0x00;
         anesthesiaType = in.readByte() != 0x00;
     }
-
     @Override
     public int describeContents() {
         return 0;
     }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
@@ -95,7 +82,6 @@ public class Patient implements Parcelable, Serializable {
         dest.writeByte((byte) (withEpinephrine ? 0x01 : 0x00));
         dest.writeByte((byte) (anesthesiaType ? 0x01 : 0x00));
     }
-
     @SuppressWarnings("unused")
     public static final Parcelable.Creator<Patient> CREATOR = new Parcelable.Creator<Patient>() {
         @Override

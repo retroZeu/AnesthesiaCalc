@@ -1,6 +1,8 @@
 package com.example.mzdoes.anesthesiacalc;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -59,41 +61,19 @@ public class MainActivity extends AppCompatActivity {
                 patient.setName(nameHolder); patient.setWeight(weightHolder);
                 patient.setWithEpinephrine(withEpinephrineHolder); patient.setAnesthesiaType(anesthesiaTypeHolder);
 
-
-
+                Intent i = new Intent(MainActivity.this, ResultsActivity.class);
+                i.putExtra("currentPatient", (Parcelable) patient);
+                startActivity(i);
             }
         });
     }
 
-    public String getNameHolder() {
-        return nameHolder;
-    }
-
-    public void setNameHolder(String nameHolder) {
-        this.nameHolder = nameHolder;
-    }
-
-    public int getWeightHolder() {
-        return weightHolder;
-    }
-
-    public void setWeightHolder(int weightHolder) {
-        this.weightHolder = weightHolder;
-    }
-
-    public boolean isWithEpinephrineHolder() {
-        return withEpinephrineHolder;
-    }
-
-    public void setWithEpinephrineHolder(boolean withEpinephrineHolder) {
-        this.withEpinephrineHolder = withEpinephrineHolder;
-    }
-
-    public boolean isAnesthesiaTypeHolder() {
-        return anesthesiaTypeHolder;
-    }
-
-    public void setAnesthesiaTypeHolder(boolean anesthesiaTypeHolder) {
-        this.anesthesiaTypeHolder = anesthesiaTypeHolder;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        nameEditText.setText("");
+        weightEditText.setText("");
+        anesthesiaRadioGroup.clearCheck();
+        epinephrineCheckBox.setChecked(false);
     }
 }
