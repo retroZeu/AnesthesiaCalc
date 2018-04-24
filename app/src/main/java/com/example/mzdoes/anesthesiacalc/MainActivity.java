@@ -10,11 +10,12 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     private FloatingActionButton nextButton;
-    private EditText nameEditText, weightEditText;
+    private EditText nameEditText, weightEditText, concentrationEditText;
     private RadioGroup anesthesiaRadioGroup;
     private CheckBox epinephrineCheckBox;
 
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String nameHolder;
     private int weightHolder;
+    private double concentrationHolder;
     private boolean withEpinephrineHolder, anesthesiaTypeHolder; //type: true = lidocaine, false = bupivocaine
 
 
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         nextButton = findViewById(R.id.floatingActionButton);
         nameEditText = findViewById(R.id.editText_name);
         weightEditText = findViewById(R.id.editText_weight);
+        concentrationEditText = findViewById(R.id.editText_concentration);
         anesthesiaRadioGroup = findViewById(R.id.radioGroup);
         epinephrineCheckBox = findViewById(R.id.checkBox_epinephrine);
 
@@ -57,12 +60,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 nameHolder = nameEditText.getText().toString();
                 weightHolder = Utility.getNextInt(weightEditText.getText().toString());
+                concentrationHolder = Utility.getNextDouble(concentrationEditText.getText().toString());
 
-                patient.setName(nameHolder); patient.setWeight(weightHolder);
+                patient.setName(nameHolder); patient.setWeight(weightHolder); patient.setConcentration(concentrationHolder);
+                // Toast.makeText(MainActivity.this, "" + patient.getConcentration(), Toast.LENGTH_SHORT).show();
                 patient.setWithEpinephrine(withEpinephrineHolder); patient.setAnesthesiaType(anesthesiaTypeHolder);
 
                 Intent i = new Intent(MainActivity.this, ResultsActivity.class);
                 i.putExtra("currentPatient", (Parcelable) patient);
+                i.putExtra("concentration", patient.getConcentration());
                 startActivity(i);
             }
         });
@@ -73,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         nameEditText.setText("");
         weightEditText.setText("");
+        concentrationEditText.setText("");
         anesthesiaRadioGroup.clearCheck();
         epinephrineCheckBox.setChecked(false);
     }

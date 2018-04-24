@@ -20,4 +20,9 @@ public class Utility {
         Scanner s = new Scanner(string);
         return s.nextInt();
     }
+
+    public static double getNextDouble(String string) {
+        Scanner s = new Scanner(string);
+        return s.nextDouble();
+    }
 }

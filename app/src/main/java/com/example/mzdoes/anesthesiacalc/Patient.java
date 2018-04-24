@@ -14,6 +14,7 @@ import java.io.Serializable;
 public class Patient implements Parcelable, Serializable {
     private String name;
     private int weight;
+    private double concentration;
     private boolean withEpinephrine;
     private boolean anesthesiaType; //true = lidocaine, false = bupivocaine
 
@@ -22,6 +23,7 @@ public class Patient implements Parcelable, Serializable {
         weight = 150;
         withEpinephrine = false;
         anesthesiaType = false;
+        concentration = 0.005;
     }
 
     public String getName() {
@@ -94,4 +96,12 @@ public class Patient implements Parcelable, Serializable {
             return new Patient[size];
         }
     };
+
+    public double getConcentration() {
+        return concentration;
+    }
+
+    public void setConcentration(double concentration) {
+        this.concentration = concentration;
+    }
 }

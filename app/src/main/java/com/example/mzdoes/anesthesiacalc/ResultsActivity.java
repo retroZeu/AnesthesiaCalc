@@ -13,6 +13,7 @@ public class ResultsActivity extends AppCompatActivity {
 
     private Patient currentPatient;
     private String result, type, epinephrine, description;
+    private double concentration;
     private TextView resultTextView, descriptionTextView;
     private ImageButton shareButton;
     private FloatingActionButton backButton;
@@ -23,6 +24,7 @@ public class ResultsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_results);
 
         Intent i = getIntent();
+        concentration = i.getDoubleExtra("concentration", 1.0);
         currentPatient = i.getParcelableExtra("currentPatient");
 
         result = calculateDose() + " mg";
@@ -57,15 +59,17 @@ public class ResultsActivity extends AppCompatActivity {
     }
 
     public double calculateDose() {
-        double allowableDose;
+        int allowableDose;
         if (currentPatient.isAnesthesiaType()) {
             if (currentPatient.isWithEpinephrine()) {allowableDose = 7;} else {allowableDose = 3;}
         } else {allowableDose = 2;}
 
-        //placeholder concentration
-        int concentration = 10;
+        double weightComponent = currentPatient.getWeight()/10;
 
-        double dose = allowableDose * (currentPatient.getWeight()/10) * ((double) 1/concentration);
+        double concentrationComponent = 1/concentration;
+        Toast.makeText(this, "" + concentration, Toast.LENGTH_SHORT).show();
+
+        double dose = allowableDose * weightComponent * concentrationComponent;
         return (dose);
     }
 }
